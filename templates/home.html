@@ -1,0 +1,633 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Smart Hospital Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, #1a3a52 0%, #0d1f2d 100%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav .navbar-brand i {
+            font-size: 2rem;
+            color: #f093fb;
+        }
+
+        nav .nav-link {
+            color: #ccc !important;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+
+        nav .nav-link:hover {
+            color: #f093fb !important;
+        }
+
+        .btn-login, .btn-signup {
+            margin-left: 10px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a3a52 0%, #0066cc 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,.05)" stroke-width="1"/></pattern></defs><rect width="1200" height="600" fill="rgba(255,255,255,.01)" /><rect width="1200" height="600" fill="url(%23grid)" /></svg>');
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-hero {
+            background-color: #f093fb;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary-hero:hover {
+            background-color: #d66dd1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.3);
+            color: white;
+        }
+
+        .btn-secondary-hero {
+            background-color: white;
+            color: #1a3a52;
+            border: 2px solid white;
+            padding: 13px 38px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary-hero:hover {
+            background-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Statistics Section */
+        .stats-section {
+            background: white;
+            padding: 60px 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 30px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            border-left: 4px solid #0066cc;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.15);
+            background: white;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #6c757d;
+        }
+
+        /* Departments Section */
+        .departments-section {
+            padding: 60px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a3a52;
+            margin-bottom: 50px;
+        }
+
+        .department-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .department-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .department-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0066cc, #00b4ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .department-card h4 {
+            font-weight: 700;
+            color: #1a3a52;
+            margin-bottom: 15px;
+        }
+
+        .department-card p {
+            color: #6c757d;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Doctors Section */
+        .doctors-section {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .doctor-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+
+        .doctor-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f093fb, #d66dd1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .doctor-card h5 {
+            font-weight: 700;
+            color: #1a3a52;
+            margin-bottom: 10px;
+        }
+
+        .doctor-role {
+            color: #0066cc;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .doctor-shift {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        /* Appointment Form Section */
+        .appointment-section {
+            background: linear-gradient(135deg, #1a3a52 0%, #0066cc 100%);
+            color: white;
+            padding: 60px 0;
+        }
+
+        .appointment-form {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            color: #333;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .appointment-form h3 {
+            color: #1a3a52;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #1a3a52;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #0066cc;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #0052a3;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.3);
+        }
+
+        /* Footer */
+        footer {
+            background: #1a3a52;
+            color: white;
+            padding: 40px 0 20px;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+
+        footer a {
+            color: #f093fb;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn-primary-hero, .btn-secondary-hero {
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+
+        /* Message styling */
+        .alert-messages {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 2000;
+        }
+
+        .alert {
+            margin-bottom: 10px;
+            border-radius: 6px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-lg">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-hospital"></i>
+                Smart Hospital
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#departments">Departments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#doctors">Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#appointment">Appointment</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-login btn-primary-hero" href="{% url 'accounts:login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-sm btn-signup btn-secondary-hero" href="{% url 'accounts:signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="alert-messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container-lg">
+            <div class="hero-content">
+                <h1><i class="fas fa-heartbeat"></i> Welcome to Smart Hospital</h1>
+                <p>Excellence in Healthcare, Compassion in Care</p>
+                <div class="hero-buttons">
+                    <a href="#appointment" class="btn-primary-hero">Book Appointment</a>
+                    <a href="{% url 'accounts:login' %}" class="btn-secondary-hero">Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    {% if stats %}
+    <section class="stats-section">
+        <div class="container-lg">
+            <div class="row">
+                {% for stat in stats %}
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card">
+                        <div class="stat-value">{{ stat.value }}</div>
+                        <div class="stat-label">{{ stat.label }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Departments Section -->
+    {% if departments %}
+    <section class="departments-section" id="departments">
+        <div class="container-lg">
+            <h2 class="section-title">Our Departments</h2>
+            <div class="row">
+                {% for department in departments %}
+                <div class="col-lg-3 col-md-6">
+                    <div class="department-card">
+                        <div class="department-icon">
+                            <i class="fas fa-{{ department.icon }}"></i>
+                        </div>
+                        <h4>{{ department.name }}</h4>
+                        <p>{{ department.summary }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Doctors Section -->
+    {% if doctors %}
+    <section class="doctors-section" id="doctors">
+        <div class="container-lg">
+            <h2 class="section-title">Our Expert Doctors</h2>
+            <div class="row">
+                {% for doctor in doctors %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="doctor-card">
+                        <div class="doctor-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h5>{{ doctor.name }}</h5>
+                        <div class="doctor-role">{{ doctor.role }}</div>
+                        <div class="doctor-shift">
+                            <i class="fas fa-clock"></i> {{ doctor.shift }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Appointment Request Section -->
+    <section class="appointment-section" id="appointment">
+        <div class="container-lg">
+            <div class="appointment-form">
+                <h3><i class="fas fa-calendar-check"></i> Request an Appointment</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="form-group">
+                        <label for="{{ form.patient_name.id_for_label }}">Full Name *</label>
+                        {{ form.patient_name }}
+                        {% if form.patient_name.errors %}
+                        <small class="text-danger d-block mt-2">{{ form.patient_name.errors }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.email.id_for_label }}">Email Address *</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <small class="text-danger d-block mt-2">{{ form.email.errors }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Phone Number *</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                        <small class="text-danger d-block mt-2">{{ form.phone.errors }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.department.id_for_label }}">Department *</label>
+                        {{ form.department }}
+                        {% if form.department.errors %}
+                        <small class="text-danger d-block mt-2">{{ form.department.errors }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.appointment_date.id_for_label }}">Preferred Date *</label>
+                        {{ form.appointment_date }}
+                        {% if form.appointment_date.errors %}
+                        <small class="text-danger d-block mt-2">{{ form.appointment_date.errors }}</small>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.message.id_for_label }}">Message</label>
+                        {{ form.message }}
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i> Request Appointment
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container-lg">
+            <p>&copy; 2024 Smart Hospital Management System. All rights reserved.</p>
+            <p>
+                <a href="#"><i class="fas fa-phone"></i> +1 (555) 123-4567</a> |
+                <a href="#"><i class="fas fa-envelope"></i> info@smarthospital.com</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

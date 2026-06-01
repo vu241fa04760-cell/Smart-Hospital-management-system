@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>{{ title }}</h1>
+    <div class="module">
+        <h2>Hospital Stats</h2>
+        <ul>
+            <li>Total users: {{ stats.total_users }}</li>
+            <li>Total patients: {{ stats.total_patients }}</li>
+            <li>Total doctors: {{ stats.total_doctors }}</li>
+            <li>Active appointments: {{ stats.active_appointments }}</li>
+            <li>Occupied beds: {{ stats.occupied_beds }} / {{ stats.total_beds }}</li>
+            <li>Pending bills: {{ stats.pending_bills }}</li>
+            <li>Total revenue: {{ stats.total_revenue }}</li>
+        </ul>
+    </div>
+    <div class="module">
+        <h2>Recent Appointments</h2>
+        <ul>
+            {% for appointment in recent_appointments %}
+                <li>{{ appointment }}</li>
+            {% empty %}
+                <li>No recent appointments.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} | Smart Hospital Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">{{ title }}</li>
+            </ol>
+        </nav>
+        <h1 class="page-title">{{ title }}</h1>
+    </div>
+    {% if create_url %}
+        <a href="{{ create_url }}" class="add-btn">
+            <i class="fas fa-plus"></i> Add {{ title|slice:":-1" }}
+        </a>
+    {% endif %}
+</div>
+
+<div class="table-card">
+    <div class="table-header">
+        <h2 class="table-title">{{ title }} Records</h2>
+        <div class="table-actions">
+            <input type="search" class="search-input" id="tableSearch" placeholder="Search {{ title|lower }}...">
+        </div>
+    </div>
+
+    {% if objects %}
+        <div class="table-responsive">
+            <table class="table management-table" id="recordsTable">
+                <thead>
+                    <tr>
+                        <th>Record</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for object in objects %}
+                        <tr>
+                            <td>
+                                <span class="record-title">{{ object }}</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons justify-content-end">
+                                    {% if update_url %}
+                                        <a href="{% url update_url object.pk %}" class="btn-sm btn-edit" title="Edit">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    {% endif %}
+                                    {% if delete_url %}
+                                        <a href="{% url delete_url object.pk %}" class="btn-sm btn-delete" title="Delete">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-folder-open"></i>
+            <h3>No {{ title|lower }} found</h3>
+            <p>Create the first record to start managing this section.</p>
+            {% if create_url %}
+                <a href="{{ create_url }}" class="add-btn">Add {{ title|slice:":-1" }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('tableSearch');
+    const rows = document.querySelectorAll('#recordsTable tbody tr');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

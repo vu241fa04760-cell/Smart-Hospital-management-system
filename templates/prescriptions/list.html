@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Prescriptions - Smart Hospital Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Prescriptions</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Prescriptions</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-header">
+            <h5 class="table-title">Patient Prescriptions</h5>
+            <div class="table-actions">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search by patient..."
+                >
+            </div>
+        </div>
+
+        {% if prescriptions %}
+        <div class="table-responsive">
+            <table class="table" id="prescriptionsTable">
+                <thead>
+                    <tr>
+                        <th>Prescription ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Medicine</th>
+                        <th>Dosage</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prescription in prescriptions %}
+                    <tr>
+                        <td><strong>#RX{{ prescription.id }}</strong></td>
+                        <td>{{ prescription.patient.name }}</td>
+                        <td>{{ prescription.doctor.name }}</td>
+                        <td>{{ prescription.medicine.name }}</td>
+                        <td>{{ prescription.dosage }}</td>
+                        <td>{{ prescription.prescribed_date|date:"M d, Y" }}</td>
+                        <td>
+                            <span class="status-badge status-active">Active</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'prescriptions:update' prescription.id %}" class="btn-sm btn-view" title="View">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="padding: 40px; text-align: center; color: #6c757d;">
+            <p>No prescriptions found</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', debounce(function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#prescriptionsTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }, 300));
+    }
+});
+</script>
+{% endblock %}

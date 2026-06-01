@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Patient Profile | Smart Hospital Management{% endblock %}
+
+{% block content %}
+<form method="post" class="form-card delete-card">
+    {% csrf_token %}
+    <div class="delete-icon"><i class="fas fa-triangle-exclamation"></i></div>
+    <h1 class="page-title">Delete Patient Profile</h1>
+    <p>Delete <strong>{{ patient }}</strong>?</p>
+    <div class="form-buttons">
+        <button type="submit" class="btn-primary btn-danger-action">Delete</button>
+        <a href="{% url 'accounts:patient_list' %}" class="btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

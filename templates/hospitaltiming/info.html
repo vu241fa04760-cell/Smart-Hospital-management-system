@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hospital Timing - Smart Hospital Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Hospital Timing & Information</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Hospital Timing</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Hospital Information Card -->
+    <div class="table-card mb-4">
+        <h5 style="font-weight: 600; margin-bottom: 20px;">General Information</h5>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p style="color: #6c757d; margin-bottom: 5px;"><strong>Hospital Name</strong></p>
+                <p style="font-size: 16px;">Smart Hospital Management System</p>
+            </div>
+            <div class="col-md-6">
+                <p style="color: #6c757d; margin-bottom: 5px;"><strong>License Number</strong></p>
+                <p style="font-size: 16px;">HCF-2024-001234</p>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <p style="color: #6c757d; margin-bottom: 5px;"><strong>Address</strong></p>
+                <p style="font-size: 16px;">123 Medical Avenue, Healthcare City, HC 12345</p>
+            </div>
+            <div class="col-md-6">
+                <p style="color: #6c757d; margin-bottom: 5px;"><strong>Contact Number</strong></p>
+                <p style="font-size: 16px;">+1 (555) 123-4567</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p style="color: #6c757d; margin-bottom: 5px;"><strong>Email</strong></p>
+                <p style="font-size: 16px;">info@smarthospital.com</p>
+            </div>
+            <div class="col-md-6">
+                <p style="color: #6c757d; margin-bottom: 5px;"><strong>Website</strong></p>
+                <p style="font-size: 16px;">www.smarthospital.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Operating Hours -->
+    <div class="table-card mb-4">
+        <h5 style="font-weight: 600; margin-bottom: 20px;">Operating Hours</h5>
+
+        {% if timing %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Open Time</th>
+                        <th>Close Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in timing %}
+                    <tr>
+                        <td><strong>{{ item.day }}</strong></td>
+                        <td>{{ item.open_time|time:"H:i" }}</td>
+                        <td>{{ item.close_time|time:"H:i" }}</td>
+                        <td>
+                            {% if item.is_open %}
+                            <span class="status-badge status-active">Open</span>
+                            {% else %}
+                            <span class="status-badge status-inactive">Closed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p style="text-align: center; color: #6c757d; padding: 20px;">No timing information available</p>
+        {% endif %}
+    </div>
+
+    <!-- Departments Section -->
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="table-card">
+                <h5 style="font-weight: 600; margin-bottom: 20px;">Emergency Services</h5>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Emergency Room</strong>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">24/7 Available</p>
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Ambulance Service</strong>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">+1 (555) 999-1234</p>
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <strong>Critical Care Unit</strong>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">24/7 Staffed</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="table-card">
+                <h5 style="font-weight: 600; margin-bottom: 20px;">Important Contacts</h5>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Administration</strong>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">+1 (555) 123-4500</p>
+                    </li>
+                    <li style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Pharmacy</strong>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">+1 (555) 123-4501</p>
+                    </li>
+                    <li style="padding: 10px 0;">
+                        <strong>Lab Services</strong>
+                        <p style="color: #6c757d; margin: 5px 0 0 0;">+1 (555) 123-4502</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+from django import forms
+
+from .models import Medicine
+
+
+class MedicineForm(forms.ModelForm):
+    class Meta:
+        model = Medicine
+        fields = ["name", "category", "manufacturer", "stock_quantity", "price", "expiry_date"]
+        widgets = {
+            "expiry_date": forms.DateInput(attrs={"type": "date"}),
+        }

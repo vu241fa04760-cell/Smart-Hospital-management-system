@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Profiles | Smart Hospital Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Patient Profiles</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Patient Profiles</li>
+            </ol>
+        </nav>
+    </div>
+    <a href="{% url 'accounts:patient_create' %}" class="add-btn"><i class="fas fa-plus"></i> Add Patient</a>
+</div>
+
+<div class="table-card">
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Patient ID</th><th>Name</th><th>Blood Group</th><th class="text-end">Actions</th></tr></thead>
+            <tbody>
+                {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.patient_id }}</td>
+                        <td>{{ patient.user.get_full_name|default:patient.user.username }}</td>
+                        <td>{{ patient.blood_group|default:"Not added" }}</td>
+                        <td>
+                            <div class="action-buttons justify-content-end">
+                                <a href="{% url 'accounts:patient_update' patient.pk %}" class="btn-sm btn-edit">Edit</a>
+                                <a href="{% url 'accounts:patient_delete' patient.pk %}" class="btn-sm btn-delete">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4">No patient profiles found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

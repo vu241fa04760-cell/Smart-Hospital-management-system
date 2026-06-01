@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bed Management - Smart Hospital Management{% endblock %}
+
+{% block nav_beds %}active{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Bed Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Beds</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Bed Status Summary -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card primary">
+                <div class="stat-icon"><i class="fas fa-bed"></i></div>
+                <span class="stat-title">Total Beds</span>
+                <span class="stat-value">{{ total_beds }}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card success">
+                <div class="stat-icon"><i class="fas fa-check"></i></div>
+                <span class="stat-title">Available Beds</span>
+                <span class="stat-value">{{ available_beds }}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card danger">
+                <div class="stat-icon"><i class="fas fa-times"></i></div>
+                <span class="stat-title">Occupied Beds</span>
+                <span class="stat-value">{{ occupied_beds }}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card warning">
+                <div class="stat-icon"><i class="fas fa-wrench"></i></div>
+                <span class="stat-title">Under Maintenance</span>
+                <span class="stat-value">{{ maintenance_beds }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-header">
+            <h5 class="table-title">Bed List</h5>
+            <div class="table-actions">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search by bed number..."
+                >
+                <button class="filter-btn" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
+
+        {% if beds %}
+        <div class="table-responsive">
+            <table class="table" id="bedsTable">
+                <thead>
+                    <tr>
+                        <th>Bed Number</th>
+                        <th>Ward</th>
+                        <th>Type</th>
+                        <th>Patient Name</th>
+                        <th>Status</th>
+                        <th>Admission Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bed in beds %}
+                    <tr>
+                        <td><strong>#B{{ bed.bed_number }}</strong></td>
+                        <td>{{ bed.ward }}</td>
+                        <td>{{ bed.bed_type }}</td>
+                        <td>{% if bed.patient %}{{ bed.patient.name }}{% else %}-{% endif %}</td>
+                        <td>
+                            <span class="status-badge status-{{ bed.status|lower }}">
+                                {{ bed.status }}
+                            </span>
+                        </td>
+                        <td>{% if bed.admission_date %}{{ bed.admission_date|date:"M d, Y" }}{% else %}-{% endif %}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'bedmanagement:update' bed.id %}" class="btn-sm btn-edit" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'bedmanagement:delete' bed.id %}" class="btn-sm btn-delete" title="Delete" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="padding: 40px; text-align: center; color: #6c757d;">
+            <p>No beds found</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" id="filterModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Filter Beds</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="statusFilter" class="form-label">Status</label>
+                    <select id="statusFilter" class="form-control">
+                        <option value="">All</option>
+                        <option value="available">Available</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="wardFilter" class="form-label">Ward</label>
+                    <select id="wardFilter" class="form-control">
+                        <option value="">All Wards</option>
+                        <option value="A">Ward A</option>
+                        <option value="B">Ward B</option>
+                        <option value="C">Ward C</option>
+                        <option value="D">Ward D</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn-primary">Apply Filter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', debounce(function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#bedsTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }, 300));
+    }
+});
+</script>
+{% endblock %}

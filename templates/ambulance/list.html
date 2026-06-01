@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ambulance - Smart Hospital Management{% endblock %}
+
+{% block nav_ambulance %}active{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Ambulance Service</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Ambulance</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a href="{% url 'ambulance:create' %}" class="add-btn">
+                <i class="fas fa-plus"></i> Request Ambulance
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card primary">
+                <div class="stat-icon"><i class="fas fa-ambulance"></i></div>
+                <span class="stat-title">Total Ambulances</span>
+                <span class="stat-value">{{ total_ambulances }}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card success">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <span class="stat-title">Available</span>
+                <span class="stat-value">{{ available_ambulances }}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card info">
+                <div class="stat-icon"><i class="fas fa-road"></i></div>
+                <span class="stat-title">On Duty</span>
+                <span class="stat-value">{{ on_duty }}</span>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="stat-card warning">
+                <div class="stat-icon"><i class="fas fa-wrench"></i></div>
+                <span class="stat-title">Maintenance</span>
+                <span class="stat-value">{{ under_maintenance }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-header">
+            <h5 class="table-title">Ambulance Fleet</h5>
+            <div class="table-actions">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search by number..."
+                >
+            </div>
+        </div>
+
+        {% if ambulances %}
+        <div class="table-responsive">
+            <table class="table" id="ambulancesTable">
+                <thead>
+                    <tr>
+                        <th>Ambulance #</th>
+                        <th>Driver Name</th>
+                        <th>Contact</th>
+                        <th>License Plate</th>
+                        <th>Status</th>
+                        <th>Current Location</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ambulance in ambulances %}
+                    <tr>
+                        <td><strong>{{ ambulance.number }}</strong></td>
+                        <td>{{ ambulance.driver.name }}</td>
+                        <td>{{ ambulance.driver.phone_number }}</td>
+                        <td>{{ ambulance.license_plate }}</td>
+                        <td>
+                            <span class="status-badge status-{{ ambulance.status|lower }}">
+                                {{ ambulance.status }}
+                            </span>
+                        </td>
+                        <td>{{ ambulance.current_location }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'ambulance:update' ambulance.id %}" class="btn-sm btn-edit" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="padding: 40px; text-align: center; color: #6c757d;">
+            <p>No ambulances registered</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', debounce(function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#ambulancesTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }, 300));
+    }
+});
+</script>
+{% endblock %}

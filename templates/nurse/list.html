@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Nurse Management - Smart Hospital Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Nurse Management</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active">Nurses</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a href="{% url 'nurse:create' %}" class="add-btn">
+                <i class="fas fa-plus"></i> Add Nurse
+            </a>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div class="table-header">
+            <h5 class="table-title">Nurse List</h5>
+            <div class="table-actions">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Search by name..."
+                >
+            </div>
+        </div>
+
+        {% if nurses %}
+        <div class="table-responsive">
+            <table class="table" id="nursesTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Shift</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nurse in nurses %}
+                    <tr>
+                        <td>#N{{ nurse.id }}</td>
+                        <td><strong>{{ nurse.name }}</strong></td>
+                        <td>{{ nurse.email }}</td>
+                        <td>{{ nurse.phone_number }}</td>
+                        <td>{{ nurse.shift }}</td>
+                        <td>{{ nurse.department }}</td>
+                        <td>
+                            <span class="status-badge status-active">On Duty</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="{% url 'nurse:update' nurse.id %}" class="btn-sm btn-edit" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'nurse:delete' nurse.id %}" class="btn-sm btn-delete" title="Delete" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="padding: 40px; text-align: center; color: #6c757d;">
+            <p>No nurses found</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keyup', debounce(function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#nursesTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }, 300));
+    }
+});
+</script>
+{% endblock %}

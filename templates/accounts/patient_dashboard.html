@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Dashboard | Smart Hospital Management{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Patient Dashboard</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="table-card">
+            <h2 class="table-title mb-3">My Details</h2>
+            <p><strong>Name:</strong> {{ user.get_full_name|default:user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Phone:</strong> {{ user.phone_number|default:"Not added" }}</p>
+            {% if patient_profile %}
+                <p><strong>Patient ID:</strong> {{ patient_profile.patient_id }}</p>
+                <p><strong>Blood Group:</strong> {{ patient_profile.blood_group|default:"Not added" }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="table-card">
+            <h2 class="table-title mb-3">Quick Links</h2>
+            <div class="action-buttons">
+                <a href="{% url 'accounts:profile' %}" class="btn-sm btn-view">My Profile</a>
+                <a href="{% url 'appointment:list' %}" class="btn-sm btn-edit">Appointments</a>
+                <a href="{% url 'prescriptions:list' %}" class="btn-sm btn-edit">Prescriptions</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

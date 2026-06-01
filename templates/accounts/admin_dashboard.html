@@ -1,0 +1,381 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard | Smart Hospital Management{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        margin: 0;
+        background: #f4f8fb;
+        color: #17212b;
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .wrapper {
+        display: flex;
+        min-height: 100vh;
+        background: #f4f8fb;
+    }
+
+    .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: 280px;
+        background: linear-gradient(180deg, #123247 0%, #0d2433 100%);
+        color: #fff;
+        overflow-y: auto;
+        box-shadow: 10px 0 28px rgba(13, 36, 51, 0.18);
+        z-index: 10;
+    }
+
+    .sidebar-header {
+        padding: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .logo {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .logo i {
+        color: #7ed4ff;
+    }
+
+    .nav-menu {
+        list-style: none;
+        margin: 0;
+        padding: 18px 0 24px;
+    }
+
+    .nav-label {
+        display: block;
+        padding: 14px 24px 8px;
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+
+    .nav-link,
+    .logout-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 24px;
+        color: rgba(255, 255, 255, 0.84);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+        color: #fff;
+        background: rgba(11, 127, 211, 0.85);
+        border-left-color: #fff;
+    }
+
+    .logout-link {
+        margin: 18px 24px 8px;
+        padding: 11px 14px;
+        border-left: 0;
+        border-radius: 8px;
+        background: rgba(220, 53, 69, 0.14);
+        color: #ffb3b8;
+    }
+
+    .logout-link:hover {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .main-content {
+        margin-left: 280px;
+        width: calc(100% - 280px);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        position: sticky;
+        top: 0;
+        z-index: 8;
+        height: 76px;
+        background: rgba(255, 255, 255, 0.96);
+        border-bottom: 1px solid #d9e4ec;
+        box-shadow: 0 4px 14px rgba(18, 50, 71, 0.08);
+    }
+
+    .header-content {
+        height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+    }
+
+    .toggle-sidebar,
+    .search-bar button,
+    .icon-btn {
+        border: 0;
+        background: transparent;
+        color: #123247;
+    }
+
+    .search-bar {
+        display: flex;
+        align-items: center;
+        width: 320px;
+        padding: 9px 14px;
+        background: #eef5f9;
+        border: 1px solid #d9e4ec;
+        border-radius: 8px;
+    }
+
+    .search-bar input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+    }
+
+    .header-right,
+    .header-icons {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .page-content {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .page-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 26px;
+    }
+
+    .page-title {
+        margin: 0;
+        color: #17212b;
+        font-size: 30px;
+        font-weight: 750;
+    }
+
+    .breadcrumb {
+        margin: 8px 0 0;
+        padding: 0;
+        background: transparent;
+        font-size: 14px;
+    }
+
+    .stat-card,
+    .table-card {
+        background: #fff;
+        border: 1px solid #e2edf3;
+        border-radius: 8px;
+        box-shadow: 0 4px 14px rgba(18, 50, 71, 0.08);
+    }
+
+    .stat-card {
+        padding: 24px;
+        border-left: 4px solid #0b7fd3;
+    }
+
+    .stat-title {
+        display: block;
+        color: #637282;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+    }
+
+    .stat-value {
+        display: block;
+        margin-top: 8px;
+        color: #17212b;
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .table-card {
+        padding: 24px;
+    }
+
+    .table-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .table-title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 750;
+        color: #17212b;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 0;
+        border-collapse: collapse;
+    }
+
+    .table th {
+        padding: 14px;
+        background: #eef5f9;
+        color: #17212b;
+        font-size: 12px;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .table td {
+        padding: 14px;
+        border-top: 1px solid #d9e4ec;
+        vertical-align: middle;
+    }
+
+    .btn-sm {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 12px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .btn-view {
+        background: #0b7fd3;
+        color: #fff;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .status-active {
+        background: rgba(31, 157, 99, .12);
+        color: #1f9d63;
+    }
+
+    .alert-info {
+        border: 1px solid #94d8ef;
+        background: #d9f4fb;
+        color: #0b5f79;
+        border-radius: 8px;
+        padding: 14px 16px;
+    }
+
+    .footer {
+        padding: 18px 30px;
+        background: #fff;
+        border-top: 1px solid #d9e4ec;
+        color: #637282;
+        font-size: 13px;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            left: -280px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .page-content {
+            padding: 20px;
+        }
+
+        .search-bar {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Admin Dashboard</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    {% for stat in stats %}
+        <div class="col-md-3">
+            <div class="stat-card primary">
+                <span class="stat-title">{{ stat.label }}</span>
+                <span class="stat-value">{{ stat.value }}</span>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="table-card">
+            <div class="table-header">
+                <h2 class="table-title">Recent Users</h2>
+                <a href="{% url 'accounts:user_list' %}" class="btn-sm btn-view">Manage Users</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr><th>Name</th><th>Email</th><th>Role</th></tr>
+                    </thead>
+                    <tbody>
+                        {% for user in recent_users %}
+                            <tr>
+                                <td>{{ user.get_full_name|default:user.username }}</td>
+                                <td>{{ user.email }}</td>
+                                <td><span class="status-badge status-active">{{ user.get_role_display }}</span></td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="3">No users found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="table-card">
+            <h2 class="table-title mb-3">Admin Queue</h2>
+            {% for item in queue %}
+                <div class="alert alert-info mb-2">{{ item }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

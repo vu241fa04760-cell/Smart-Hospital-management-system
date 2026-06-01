@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Patient Details - Smart Hospital Management{% endblock %}
+
+{% block nav_patients %}active{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Patient Details</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'patients:list' %}">Patients</a></li>
+                    <li class="breadcrumb-item active">{{ patient.name }}</li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a href="{% url 'patients:update' patient.id %}" class="add-btn" style="background: #0066cc;">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <!-- Patient Info Card -->
+        <div class="col-lg-4">
+            <div class="table-card" style="text-align: center;">
+                <div style="margin-bottom: 20px;">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3>{{ patient.name }}</h3>
+                    <p style="color: #6c757d;">ID: #P{{ patient.id }}</p>
+                </div>
+                <div style="border-top: 1px solid #dee2e6; padding-top: 20px;">
+                    <div style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Gender:</strong> {{ patient.gender }}
+                    </div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Age:</strong> {{ patient.age }} years
+                    </div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Phone:</strong> {{ patient.phone_number }}
+                    </div>
+                    <div style="padding: 10px 0; border-bottom: 1px solid #dee2e6;">
+                        <strong>Email:</strong> {{ patient.email }}
+                    </div>
+                    <div style="padding: 10px 0;">
+                        <strong>Status:</strong> 
+                        <span class="status-badge status-active">
+                            <i class="fas fa-check-circle"></i> Active
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Tabs -->
+        <div class="col-lg-8">
+            <div class="table-card">
+                <ul class="nav nav-tabs" id="patientTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#overview" data-bs-toggle="tab">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#appointments" data-bs-toggle="tab">Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#billing" data-bs-toggle="tab">Billing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#medical" data-bs-toggle="tab">Medical History</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content" style="padding: 20px 0;">
+                    <!-- Overview Tab -->
+                    <div class="tab-pane fade show active" id="overview">
+                        <div style="padding: 20px 0;">
+                            <h6 style="font-weight: 600; margin-bottom: 15px;">Personal Information</h6>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p style="color: #6c757d; margin-bottom: 5px;">Date of Birth</p>
+                                    <p style="font-weight: 600;">{{ patient.date_of_birth|date:"M d, Y" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p style="color: #6c757d; margin-bottom: 5px;">Blood Group</p>
+                                    <p style="font-weight: 600;">O+</p>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <p style="color: #6c757d; margin-bottom: 5px;">Address</p>
+                                    <p style="font-weight: 600;">{{ patient.address }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p style="color: #6c757d; margin-bottom: 5px;">City</p>
+                                    <p style="font-weight: 600;">{{ patient.city }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p style="color: #6c757d; margin-bottom: 5px;">Admission Date</p>
+                                    <p style="font-weight: 600;">{{ patient.admission_date|date:"M d, Y" }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p style="color: #6c757d; margin-bottom: 5px;">Department</p>
+                                    <p style="font-weight: 600;">{{ patient.department }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appointments Tab -->
+                    <div class="tab-pane fade" id="appointments">
+                        <div class="table-responsive" style="padding: 20px 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor</th>
+                                        <th>Department</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Jun 01, 2026</td>
+                                        <td>Dr. John Smith</td>
+                                        <td>General Medicine</td>
+                                        <td><span class="status-badge status-completed">Completed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>May 28, 2026</td>
+                                        <td>Dr. Sarah Johnson</td>
+                                        <td>Pediatrics</td>
+                                        <td><span class="status-badge status-completed">Completed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Billing Tab -->
+                    <div class="tab-pane fade" id="billing">
+                        <div class="table-responsive" style="padding: 20px 0;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#INV001</td>
+                                        <td>$250.00</td>
+                                        <td>Jun 01, 2026</td>
+                                        <td><span class="status-badge status-active">Paid</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Medical History Tab -->
+                    <div class="tab-pane fade" id="medical">
+                        <div style="padding: 20px 0;">
+                            <h6 style="font-weight: 600; margin-bottom: 15px;">Allergies</h6>
+                            <p style="color: #6c757d; margin-bottom: 20px;">None reported</p>
+
+                            <h6 style="font-weight: 600; margin-bottom: 15px;">Previous Surgeries</h6>
+                            <p style="color: #6c757d;">No record</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
